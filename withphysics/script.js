@@ -57,7 +57,7 @@ function initThree() {
     cannonDebugRenderer = new THREE.CannonDebugRenderer(scene, world);
     keyboard = new THREEx.KeyboardState();
 
-    addSphere();
+    addBox(0, 5, 0, 0.5, 1, 0.5);
 
     area = [[1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,1],
@@ -71,7 +71,7 @@ function initThree() {
     for(var i=0;i<8;i++){
         for(var j=0;j<8;j++){
             if(area[j][i] == 1){
-                addBox(i-4, 5, j-4);
+                addBox(i-4, 5, j-4, 1, 1, 1);
             }
         }
     }
@@ -107,13 +107,13 @@ function animate(time) {
     camera.position.z = cameraOffset.z;
     camera.lookAt(meshes[0].position);
     
-    if ( keyboard.pressed("up") )    bodies[0].velocity.set( Math.sin(ang) *  5 , bodies[0].velocity.y, Math.cos(ang) *  5 );
-    if ( keyboard.pressed("down") )  bodies[0].velocity.set( Math.sin(ang) * -5 , bodies[0].velocity.y, Math.cos(ang) * -5 );
+    if ( keyboard.pressed("up")   )  bodies[0].velocity.set( Math.sin(ang) *  4 , bodies[0].velocity.y, Math.cos(ang) *  4 );
+    if ( keyboard.pressed("down") )  bodies[0].velocity.set( Math.sin(ang) * -4 , bodies[0].velocity.y, Math.cos(ang) * -4 );
     if ( keyboard.pressed("left") ){
         ang -= 0.1;
         bodies[0].quaternion.setFromEuler(0, ang, 0);
     }
-    if ( keyboard.pressed("right") ){
+    if ( keyboard.pressed("right")){
         ang += 0.1;
         bodies[0].quaternion.setFromEuler(0, ang, 0);
     }
@@ -163,9 +163,9 @@ function addPlane(){
     meshes.push(mesh);
 }
 
-function addBox(x,y,z){
+function addBox(x,y,z,l,a,c){
     // Physics
-    var shape = new CANNON.Box(new CANNON.Vec3(0.5,0.5,0.5));
+    var shape = new CANNON.Box(new CANNON.Vec3(l/2,a/2,c/2));
     var body = new CANNON.Body({ mass: mass , fixedRotation: true });
     body.addShape(shape);
     body.position.set(x,y,z);
@@ -173,7 +173,7 @@ function addBox(x,y,z){
     bodies.push(body);
 
     // Graphics
-    var cubeGeo = new THREE.BoxGeometry( 1, 1, 1, 10, 10 );
+    var cubeGeo = new THREE.BoxGeometry( l, a, c, 10, 10 );
     cubeMesh = new THREE.Mesh(cubeGeo, material);
     meshes.push(cubeMesh);
     scene.add(cubeMesh);
