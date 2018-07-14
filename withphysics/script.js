@@ -117,12 +117,21 @@ function animate(time) {
         ang += 0.1;
         bodies[0].quaternion.setFromEuler(0, ang, 0);
     }
-    if ( keyboard.pressed("space") )  bodies[0].velocity.set( bodies[0].velocity.x , 4, bodies[0].velocity.z );
+    if ( keyboard.pressed("space") && check() )  bodies[0].velocity.set( bodies[0].velocity.x , 4, bodies[0].velocity.z );
 
     renderer.render(scene, camera);
     lastTime = time;
 }
 
+function check(){
+    for(var i=0; i<world.contacts.length; i++){
+        var c = world.contacts[i];
+        if(c.bi === bodies[0] || c.bj === bodies[0]){
+            return true;
+        }
+    }
+    return false;
+}
 
 function updateMeshPositions(){
     for(var i=0; i !== meshes.length; i++){
